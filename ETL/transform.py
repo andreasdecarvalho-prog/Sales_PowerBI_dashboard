@@ -1,1 +1,0 @@
-# reads into dummy csv file, selects wich columns will stay, parse data and writes to new sqlite db
