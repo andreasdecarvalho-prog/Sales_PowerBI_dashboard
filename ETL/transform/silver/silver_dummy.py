@@ -1,48 +1,14 @@
-import pandas as pd
-import sqlite3
+import helper_functions as hf
 
-# reads into dummy csv file, selects wich columns will stay, parse data and writes to new sqlite db
+FILE_NAME = "dummy"
+CSV_PATH, DB_PATH = hf.get_csv_and_db_path(FILE_NAME)
+COLUMNS = hf.COLUMNS
+COLUMN_MAPPING = hf.COLUMN_MAPPING
+
+
 def main():
-    cols = ["id", 
-        "title", 
-        "category", 
-        "price", 
-        "rating", 
-        "stock", 
-        "brand", 
-        "availabilityStatus",
-        ]
-
-    products = pd.read_csv("/Users/camelo/power_bi?/data/bronze/dummyjson.csv", usecols=cols)
-
-
-    pd.set_option("display.max_columns", None)
-
-    # renaming columns for better readabilty
-    products = products.rename(columns={
-        "title": "product",
-        "availabilityStatus": "availability",
-    })
-
-    conn = sqlite3.connect("products.db")
-    cur = conn.cursor()
-
-
-
-    products.to_sql("products", conn, if_exists="replace", index=False)
-
-  
-
+    hf.silver_store_logic(CSV_PATH, DB_PATH, FILE_NAME)
 
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-

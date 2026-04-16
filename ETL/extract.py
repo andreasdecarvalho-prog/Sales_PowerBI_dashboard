@@ -3,15 +3,17 @@ from pathlib import Path
 from requests import get
 
 # Config
-RAW_DATA_DIR = Path(__file__).parent.parent / "data" / "raw"
+RAW_DATA_DIR = Path.cwd() / "data" / "bronze"
 APIs = {
     "dummyjson": {"url": "https://dummyjson.com/products", "key": "products"},
     "fakestore": {"url": "https://fakestoreapi.com/products", "key": None},
 }
 
+FILE_NAMES = []
 
 def main():
     RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)  # Create dir if missing
+
 
     for api_name, config in APIs.items():
         try:
@@ -23,11 +25,16 @@ def main():
                 data = data[config["key"]]
 
             file_name = get_file_name_from_url(url)
+            
+            FILE_NAMES.append(file_name)
+
             response_to_csv(data, file_name)
-            print(f"Data extracted from {url}")
+
 
         except Exception as e:
             print(f"Error processing {api_name}: {e}")
+
+    print("- Extraction complete")
 
 
 def extract(url: str) -> dict | list:
@@ -51,7 +58,6 @@ def response_to_csv(data: list[dict], file_name: str) -> None:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(data)
-        print(f"Saved to {file_path}")
     except IOError as e:
         print(f"Failed to write CSV: {e}")
         raise
