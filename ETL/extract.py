@@ -9,9 +9,9 @@ APIs = {
     "fakestore": {"url": "https://fakestoreapi.com/products", "key": None},
 }
 
-FILE_NAMES = []
+FILE_NAMES = [] 
 
-def main():
+def main() -> list[str]:
     RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)  # Create dir if missing
 
 
@@ -35,6 +35,8 @@ def main():
             print(f"Error processing {api_name}: {e}")
 
     print("- Extraction complete")
+    return FILE_NAMES
+
 
 
 def extract(url: str) -> dict | list:
