@@ -11,14 +11,15 @@ APIs = {
 
 FILE_NAMES = [] 
 
-def main() -> list[str]:
-    RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)  # Create dir if missing
 
+# extracts raw data and loads it to csv
+def extract_to_csv() -> list[str]:
+    RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)  # Create dir if missing
 
     for api_name, config in APIs.items():
         try:
             url = config["url"]
-            data = extract(url)
+            data = fetch_data(url)
 
             # Handle both API response structures
             if config["key"]:
@@ -39,7 +40,7 @@ def main() -> list[str]:
 
 
 
-def extract(url: str) -> dict | list:
+def fetch_data(url: str) -> dict | list:
     """Fetch JSON data from URL."""
     response = get(url, timeout=10)
     response.raise_for_status()  # Raises HTTPError for bad status

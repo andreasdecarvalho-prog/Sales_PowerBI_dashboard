@@ -6,7 +6,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
-COLUMNS = ["id", "title", "category", "price", "rating"]
+COLUMNS = ["title", "category", "price", "rating"]
 COLUMN_MAPPING = {"title": "product"}
 
 DB_PATH = Path.cwd() / "data" / "silver" / "products.db"
@@ -29,6 +29,9 @@ def csv_to_df(csv_path: Path) -> pd.DataFrame:
     except pd.errors.ParserError as e:
         raise ValueError(f"CSV parsing error: {e}") from e
 
+def get_df(file_name: str) -> pd.DataFrame:
+    csv_path = get_csv_path(file_name)
+    return csv_to_df(csv_path)
 
 def df_to_table(df: pd.DataFrame, table_name: str) -> None:
     if df.empty:
