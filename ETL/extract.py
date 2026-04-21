@@ -1,74 +1,84 @@
 import csv
-from pathlib import Path
-from requests import get
+from requests import get, RequestException
+from core.logger import logger
+from core.config import BRONZE_DIR, APIS, REQUEST_TIMEOUT, CSV_ENCODING
 
-# Config
-RAW_DATA_DIR = Path.cwd() / "data" / "bronze"
-APIs = {
-    "dummyjson": {"url": "https://dummyjson.com/products", "key": "products"},
-    "fakestore": {"url": "https://fakestoreapi.com/products", "key": None},
-}
-
-FILE_NAMES = [] 
+FILE_NAMES: list[str] = []
 
 
-# extracts raw data and loads it to csv
 def extract_to_csv() -> list[str]:
-    RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)  # Create dir if missing
+    """
+    Extract raw data from APIs and save to CSV files.
+    Returns a list of generated file names.
+    """
+    BRONZE_DIR.mkdir(parents=True, exist_ok=True)
 
-    for api_name, config in APIs.items():
+    for api_name, config in APIS.items():
+        url = config["url"]
         try:
-            url = config["url"]
             data = fetch_data(url)
 
-            # Handle both API response structures
             if config["key"]:
-                data = data[config["key"]]
+                data = data.get(config["key"], [])
+                if not data:
+                    logger.warning("No data found under key '%s' for %s", config["key"], api_name)
 
             file_name = get_file_name_from_url(url)
-            
             FILE_NAMES.append(file_name)
 
             response_to_csv(data, file_name)
-
+            logger.info("Successfully processed %s → %s.csv", api_name, file_name)
 
         except Exception as e:
-            print(f"Error processing {api_name}: {e}")
+            logger.error("Error processing %s: %s", api_name, e, exc_info=True)
 
-    print("- Extraction complete")
+    logger.info("Extraction complete")
     return FILE_NAMES
 
 
-
 def fetch_data(url: str) -> dict | list:
-    """Fetch JSON data from URL."""
-    response = get(url, timeout=10)
-    response.raise_for_status()  # Raises HTTPError for bad status
-    return response.json()
+    """Fetch JSON data from URL with error handling."""
+    try:
+        response = get(url, timeout=REQUEST_TIMEOUT)
+        response.raise_for_status()
+        return response.json()
+    except RequestException as e:
+        logger.error("Failed to fetch data from %s: %s", url, e)
+        raise
 
 
 def response_to_csv(data: list[dict], file_name: str) -> None:
     """Write list of dicts to CSV file."""
     if not data:
-        print(f"Warning: No data to write for {file_name}")
+        logger.warning("No data to write for %s", file_name)
         return
 
-    file_path = RAW_DATA_DIR / f"{file_name}.csv"
+    file_path = BRONZE_DIR / f"{file_name}.csv"
 
     try:
-        with open(file_path, "w", newline="", encoding="utf-8") as f:
+        with open(file_path, "w", newline="", encoding=CSV_ENCODING) as f:
             fieldnames = data[0].keys()
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(data)
     except IOError as e:
-        print(f"Failed to write CSV: {e}")
+        logger.error("Failed to write CSV %s: %s", file_path, e)
         raise
 
 
 def get_file_name_from_url(url: str) -> str:
     """Extract domain name from URL."""
-    return url.split("//")[1].split(".")[0]
+    try:
+        return url.split("//")[1].split(".")[0]
+    except IndexError:
+        logger.warning("Could not parse file name from URL: %s", url)
+        return "unknown"
+
+
+def main() -> None:
+    """Entry point for extraction script."""
+    files = extract_to_csv()
+    logger.info("Generated files: %s", files)
 
 
 if __name__ == "__main__":

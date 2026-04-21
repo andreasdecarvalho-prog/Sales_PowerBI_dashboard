@@ -1,10 +1,10 @@
 from ETL.extract import extract_to_csv
 from ETL.silver.fakestore import transform_fakestore
 from ETL.silver.dummy import transform_dummy
-from ETL.silver.silver_logic import products_dfs_to_db
+from ETL.silver.silver_functions import products_dfs_to_db
+from ETL.silver.gen_fake_sales import fake_sales
 
 def main():
-
     # get data
     file_names = extract_to_csv()
 
@@ -20,15 +20,18 @@ def main():
 
 
     # generate fake sales data into sales table
-    ...
-
-
-    # 
+    fake_sales()
 
 
 
 
 
+"""
+SELECT s.id, product, quantity, sale_date, gross_profit
+FROM sales s
+JOIN products p ON s.product_id = p.id;
+
+"""
 
 
 
