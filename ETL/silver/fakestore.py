@@ -23,7 +23,7 @@ def transform_fakestore(file_name: str) -> pd.DataFrame | None:
             lambda x: ast.literal_eval(x)["rate"] if isinstance(x, str) else x
         )
 
-        logger.info("Transformation complete for %s", file_name)
+        logger.debug("Transformation complete for %s", file_name)
         return df
 
     except (FileNotFoundError, ValueError, RuntimeError, SyntaxError) as e:

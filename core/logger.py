@@ -20,4 +20,4 @@ logging.basicConfig(
 
 logger = logging.getLogger("ETL")
 
-print("Resolved LOG_DIR:", LOG_DIR)
+

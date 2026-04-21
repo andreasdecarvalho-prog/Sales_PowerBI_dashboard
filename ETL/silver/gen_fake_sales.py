@@ -33,7 +33,7 @@ def generate_fake_sales(products_table: pd.DataFrame, n_sales: int = 1000) -> pd
             "gross_profit": gross_profit
         })
 
-    logger.info("Generated %d fake sales records", n_sales)
+    logger.debug("Generated %d fake sales records", n_sales)
     return pd.DataFrame(sales)
 
 
@@ -49,7 +49,7 @@ def insert_sales_into_db(sales_df: pd.DataFrame, table_name: str = "sales") -> N
     try:
         with sqlite3.connect(SILVER_DB) as conn:
             sales_df.to_sql(table_name, conn, if_exists="replace", index=False)
-        logger.info("Inserted %d records into table '%s'", len(sales_df), table_name)
+        logger.debug("Inserted %d records into table '%s'", len(sales_df), table_name)
     except sqlite3.Error as e:
         logger.error("Database error inserting sales: %s", e, exc_info=True)
         raise
@@ -65,7 +65,7 @@ def fake_sales(n_sales: int = 1000) -> None:
 
         fake_sales_df = generate_fake_sales(products_table, n_sales)
         insert_sales_into_db(fake_sales_df, "sales")
-        logger.info("Fake sales pipeline complete")
+        logger.info("Fake sales ready")
 
     except sqlite3.Error as e:
         logger.error("Failed to read products table: %s", e, exc_info=True)

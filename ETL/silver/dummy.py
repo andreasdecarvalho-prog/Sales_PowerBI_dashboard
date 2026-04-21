@@ -21,7 +21,7 @@ def transform_dummy(file_name: str) -> pd.DataFrame | None:
         cols.insert(1, "price")
         df = df[cols]
 
-        logger.info("Transformation complete for %s", file_name)
+        logger.debug("Transformation complete for %s", file_name)
         return df
 
     except (FileNotFoundError, ValueError, RuntimeError) as e:

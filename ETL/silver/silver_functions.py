@@ -63,7 +63,7 @@ def products_dfs_to_db(file_names: list[str], dfs: list[pd.DataFrame]) -> None:
         try:
             table_name = df_to_table(df, f"silver_{file_name}")
             TABLE_NAMES.append(table_name)
-            logger.info("Table %s created successfully", table_name)
+            logger.debug("Table %s created successfully", table_name)
         except (FileNotFoundError, ValueError, RuntimeError) as e:
             logger.error("%s failed: %s", file_name, e, exc_info=True)
             continue
@@ -91,7 +91,7 @@ def products_dfs_to_db(file_names: list[str], dfs: list[pd.DataFrame]) -> None:
         with sqlite3.connect(SILVER_DB) as conn:
             conn.executescript("DROP TABLE IF EXISTS products;")
             conn.executescript(merge_query)
-        logger.info("Merged tables into 'products'")
+        logger.debug("Merged tables into 'products'")
     except sqlite3.Error as e:
         logger.error("Failed to merge tables into 'products': %s", e, exc_info=True)
 

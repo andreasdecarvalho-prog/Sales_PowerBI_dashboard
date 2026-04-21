@@ -27,7 +27,7 @@ def extract_to_csv() -> list[str]:
             FILE_NAMES.append(file_name)
 
             response_to_csv(data, file_name)
-            logger.info("Successfully processed %s → %s.csv", api_name, file_name)
+            logger.debug("Successfully processed %s → %s.csv", api_name, file_name)
 
         except Exception as e:
             logger.error("Error processing %s: %s", api_name, e, exc_info=True)
@@ -75,11 +75,3 @@ def get_file_name_from_url(url: str) -> str:
         return "unknown"
 
 
-def main() -> None:
-    """Entry point for extraction script."""
-    files = extract_to_csv()
-    logger.info("Generated files: %s", files)
-
-
-if __name__ == "__main__":
-    main()
