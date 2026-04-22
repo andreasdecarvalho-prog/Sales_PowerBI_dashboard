@@ -1,0 +1,18 @@
+# Bytecode / cache
+__pycache__/
+*.pyc
+
+# Logs
+core/logs/
+
+# Data outputs
+data/bronze/
+data/silver/
+
+# Virtual environments
+venv/
+.venv/
+
+# OS files
+.DS_Store
+Thumbs.db
