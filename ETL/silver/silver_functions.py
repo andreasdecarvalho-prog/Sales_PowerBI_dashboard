@@ -2,7 +2,7 @@ from pathlib import Path
 import pandas as pd
 import sqlite3
 from core.logger import logger
-from core.config import BRONZE_DIR, SILVER_DB
+from core.config import BRONZE_DIR, GOLD_DB
 
 # Column definitions
 COLUMNS = ["title", "category", "price", "rating"]
@@ -43,8 +43,8 @@ def df_to_table(df: pd.DataFrame, table_name: str) -> str:
         raise ValueError("DataFrame is empty, nothing to write")
 
     try:
-        SILVER_DB.parent.mkdir(parents=True, exist_ok=True)
-        with sqlite3.connect(SILVER_DB) as conn:
+        GOLD_DB.parent.mkdir(parents=True, exist_ok=True)
+        with sqlite3.connect(GOLD_DB) as conn:
             df.to_sql(table_name, conn, if_exists="replace", index=False)
         return table_name
     except sqlite3.Error as e:
@@ -53,7 +53,7 @@ def df_to_table(df: pd.DataFrame, table_name: str) -> str:
 
 def products_dfs_to_db(file_names: list[str], dfs: list[pd.DataFrame]) -> None:
     """
-    Write multiple product DataFrames to the Silver DB and merge them into a unified 'products' table.
+    Write multiple product DataFrames to the Gold DB and merge them into a unified 'products' table.
     """
     if not file_names:
         logger.warning("No files to process")
@@ -88,10 +88,10 @@ def products_dfs_to_db(file_names: list[str], dfs: list[pd.DataFrame]) -> None:
     """
 
     try:
-        with sqlite3.connect(SILVER_DB) as conn:
+        with sqlite3.connect(GOLD_DB) as conn:
             conn.executescript("DROP TABLE IF EXISTS products;")
             conn.executescript(merge_query)
-        logger.debug("Merged tables into 'products'")
+        logger.info("Merged tables into 'products'")
     except sqlite3.Error as e:
         logger.error("Failed to merge tables into 'products': %s", e, exc_info=True)
 

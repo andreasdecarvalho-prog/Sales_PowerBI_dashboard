@@ -4,11 +4,11 @@ from pathlib import Path
 BASE_DIR = Path.cwd()
 DATA_DIR = BASE_DIR / "data"
 BRONZE_DIR = DATA_DIR / "bronze"
-SILVER_DIR = DATA_DIR / "silver"
+GOLD_DIR = DATA_DIR / "gold"
 
 
 # Ensure directories exist
-for d in [DATA_DIR, BRONZE_DIR, SILVER_DIR]:
+for d in [DATA_DIR, BRONZE_DIR, GOLD_DIR]:
     d.mkdir(parents=True, exist_ok=True)
 
 # API endpoints
@@ -18,7 +18,7 @@ APIS = {
 }
 
 # Database
-SILVER_DB = SILVER_DIR / "products.db"
+GOLD_DB = GOLD_DIR / "products.db"
 
 # Settings
 REQUEST_TIMEOUT = 10

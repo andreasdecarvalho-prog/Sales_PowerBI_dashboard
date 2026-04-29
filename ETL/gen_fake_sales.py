@@ -3,7 +3,8 @@ import pandas as pd
 from datetime import datetime, timedelta
 import sqlite3
 from core.logger import logger
-from core.config import SILVER_DB
+from core.config import GOLD_DB
+from ETL.gold.gold_csv import df_to_gold_csv
 
 
 def generate_fake_sales(products_table: pd.DataFrame, n_sales: int = 1000) -> pd.DataFrame:
@@ -34,7 +35,10 @@ def generate_fake_sales(products_table: pd.DataFrame, n_sales: int = 1000) -> pd
         })
 
     logger.debug("Generated %d fake sales records", n_sales)
-    return pd.DataFrame(sales)
+
+    df =  pd.DataFrame(sales)
+
+    return df
 
 
 def insert_sales_into_db(sales_df: pd.DataFrame, table_name: str = "sales") -> None:
@@ -47,7 +51,7 @@ def insert_sales_into_db(sales_df: pd.DataFrame, table_name: str = "sales") -> N
         return
 
     try:
-        with sqlite3.connect(SILVER_DB) as conn:
+        with sqlite3.connect(GOLD_DB) as conn:
             sales_df.to_sql(table_name, conn, if_exists="replace", index=False)
         logger.debug("Inserted %d records into table '%s'", len(sales_df), table_name)
     except sqlite3.Error as e:
@@ -60,12 +64,14 @@ def fake_sales(n_sales: int = 1000) -> None:
     Generate and insert fake sales into the Silver DB.
     """
     try:
-        with sqlite3.connect(SILVER_DB) as conn:
+        with sqlite3.connect(GOLD_DB) as conn:
             products_table = pd.read_sql_query("SELECT * FROM products;", conn)
 
         fake_sales_df = generate_fake_sales(products_table, n_sales)
         insert_sales_into_db(fake_sales_df, "sales")
-        logger.info("Fake sales ready")
+        return df_to_gold_csv(fake_sales_df, "fake_sales_gold.csv")
+
+
 
     except sqlite3.Error as e:
         logger.error("Failed to read products table: %s", e, exc_info=True)
