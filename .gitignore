@@ -1,20 +1,34 @@
 # Bytecode / cache
 __pycache__/
 *.pyc
+*.pyo
 
 # Logs
+*.log
 core/logs/
-
-# Data outputs
-data/bronze/
-data/silver/
-
-# Virtual environments
-venv/
-.venv/
 
 # OS files
 .DS_Store
 Thumbs.db
 
+# Virtual environments
+venv/
+.venv/
+
+# Environment variables
 .env
+
+# Data outputs (gerados pelo ETL, não versionar)
+data/bronze/*
+data/silver/*
+data/gold/*
+
+# Mas mantenha a estrutura das pastas
+!data/bronze/.gitkeep
+!data/silver/.gitkeep
+!data/gold/.gitkeep
+
+# Backup / temp files
+*.bak
+*.swp
+*.tmp
