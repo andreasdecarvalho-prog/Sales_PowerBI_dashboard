@@ -24,7 +24,7 @@ def main():
 
 
     # create silver_products db with already parsed data that is still dfs
-    products_dfs_to_db(raw_files, dfs)
+    gold_files.append(products_dfs_to_db(raw_files, dfs))
 
 
     # generate fake sales data into sales table

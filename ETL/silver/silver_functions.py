@@ -2,7 +2,7 @@ from pathlib import Path
 import pandas as pd
 import sqlite3
 from core.logger import logger
-from core.config import BRONZE_DIR, GOLD_DB
+from core.config import BRONZE_DIR, GOLD_DB, BASE_DIR
 
 # Column definitions
 COLUMNS = ["title", "category", "price", "rating"]
@@ -92,6 +92,7 @@ def products_dfs_to_db(file_names: list[str], dfs: list[pd.DataFrame]) -> None:
             conn.executescript("DROP TABLE IF EXISTS products;")
             conn.executescript(merge_query)
         logger.info("Merged tables into 'products'")
+        return str(GOLD_DB.relative_to(BASE_DIR))
     except sqlite3.Error as e:
         logger.error("Failed to merge tables into 'products': %s", e, exc_info=True)
 
