@@ -8,42 +8,43 @@ Este projeto demonstra uma abordagem profissional para análise e visualização
 
 ---
 
-### Por que Power BI?
-
-- **Visualizações interativas**: criar dashboards dinâmicos e responsivos
-- **Integração com múltiplas fontes**: conectar dados de diferentes sistemas
-- **Análise em tempo real**: monitorar métricas de vendas constantemente
-- **Escalabilidade**: fácil adicionar novos relatórios e KPIs sem retrabalho
-
----
-
-## 📊 Estrutura do Projeto
+##  Estrutura do Projeto
 
 ```
 Sales_PowerBI_dashboard/
-├── data/                      # Dados brutos de origem
-│   ├── sales_data.csv        # Dados de transações de vendas
-│   ├── customers.csv         # Informações de clientes
-│   └── products.csv          # Informações de produtos
-├── scripts/                   # Scripts de processamento
-│   ├── data_cleaning.py      # Limpeza e validação de dados
-│   ├── data_transformation.py # Transformações e enriquecimento
-│   └── etl_pipeline.py       # Orquestrador do pipeline
-├── dashboards/               # Arquivos Power BI
-│   └── Sales_Dashboard.pbix  # Dashboard principal de vendas
-└── README.md                 # Este arquivo
+├── .env
+├── .gitignore
+├── ETL
+│   ├── bronze
+│   │   └── extract.py
+│   ├── deliver.py
+│   ├── gen_fake_sales.py
+│   ├── gold
+│   │   └── gold_csv.py
+│   └── silver
+│       ├── dummy.py
+│       ├── fakestore.py
+│       └── silver_functions.py
+├── README.md
+├── core
+│   ├── config.py
+│   ├── logger.py
+│   └── logs
+│       └── etl.log
+├── main.py
+└──requirements.txt
 ```
 
 ---
 
-## 🔄 Fluxo de Dados
+##  Fluxo de Dados
 
 ### **Etapa 1: Extração de Dados**
 
 A primeira etapa envolve:
-- **Ler arquivos** de sistemas de origem (CSVs)
-- **Validar estrutura** dos dados de entrada
-- **Documentar** metadados e origem dos dados
+- Extrair dados de produtos via API
+- Validar estrutura dos dados de entrada
+- Documentar metadados e origem dos dados
 
 ### **Etapa 2: Limpeza e Transformação**
 
@@ -59,43 +60,26 @@ A estrutura dos dados é otimizada seguindo o padrão **Star Schema**:
 
 #### Tabelas Dimensionais:
 
-**Dimensão: Customers**
-- customer_id
-- customer_name
-- city
-- region
-- customer_segment
-
 **Dimensão: Products**
-- product_id
-- product_name
+- id
+- product
 - category
-- subcategory
-- unit_price
+- price
+- rating
 
-**Dimensão: Date** (Calendário)
-- date_key
-- date
-- month
-- quarter
-- year
 
 #### Tabela de Fatos:
 
 **Sales (Fatos)**
-- order_id
-- customer_id
+- id
 - product_id
 - date_id
 - quantity
-- unit_price
-- total_amount
-- discount
-- net_sales
+- gross_profit
 
 ---
 
-## 📈 KPIs Principais no Dashboard
+##  KPIs Principais no Dashboard
 
 - **Total de Vendas**: receita total no período
 - **Número de Transações**: volume de pedidos
@@ -107,53 +91,26 @@ A estrutura dos dados é otimizada seguindo o padrão **Star Schema**:
 
 ---
 
-## 🚀 Como Executar
+##  Como Executar
 
-### Pré-requisitos:
-- Python 3.8+
-- pandas, numpy
-- Power BI Desktop (ou acesso ao Power BI Service)
-- Arquivos de dados de origem em `/data`
+```bash
+python3 main.py
+```
 
-### Passos:
-
-1. **Preparar dados brutos**
-   ```bash
-   python scripts/data_cleaning.py
-   ```
-
-2. **Executar transformações**
-   ```bash
-   python scripts/data_transformation.py
-   ```
-
-3. **Rodar pipeline completo**
-   ```bash
-   python scripts/etl_pipeline.py
-   ```
-
-4. **Abrir dashboard no Power BI**
-   - Abrir `dashboards/Sales_Dashboard.pbix`
-   - Atualizar conexão com dados transformados
-   - Interagir com visualizações
+E toda a pipeline é executada
 
 ---
 
-## 📋 Tecnologias Utilizadas
+##  Tecnologias Utilizadas
 
 - **Python**: scripts de ETL
 - **Pandas**: manipulação e transformação de dados
 - **Power BI**: visualização e dashboards
-- **SQL**: modelagem de dados (se aplicável)
+- **SQL**: modelagem de dados 
 
 ---
 
-## 👤 Autor
+##  Autor
 
 **Andreas de Carvalho** - Engenheiro de Dados / Analista de Dados
 
----
-
-## 📝 Notas
-
-Este projeto é um exemplo educacional de pipeline de dados para BI, demonstrando boas práticas em limpeza, transformação e visualização de dados de vendas.
