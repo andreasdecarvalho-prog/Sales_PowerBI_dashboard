@@ -23,7 +23,6 @@ data/bronze/*
 data/silver/*
 data/gold/*
 
-# Mas mantenha a estrutura das pastas
 !data/bronze/.gitkeep
 !data/silver/.gitkeep
 !data/gold/.gitkeep
@@ -32,3 +31,5 @@ data/gold/*
 *.bak
 *.swp
 *.tmp
+
+.gitignore

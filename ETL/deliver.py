@@ -2,6 +2,7 @@ import smtplib
 from email.message import EmailMessage
 from pathlib import Path
 from dotenv import load_dotenv
+from core.logger import logger
 import os
 
 load_dotenv()
@@ -24,7 +25,7 @@ def send_data_email(files):
     msg["To"] = to_address
     msg.set_content(
         "Hello,\n\nAttached are the latest datasets:\n"
-        "- Sales (CSV)\n- Dummy products (CSV)\n- Fakestore products (CSV)\n"
+        "- Sales (CSV)\n- Products (CSV)\n"
         "- Products database (SQLite)\n\n"
         "You can choose whether to use CSV or SQL.\n\nBest regards,\nAndreas"
     )
@@ -46,6 +47,7 @@ def send_data_email(files):
             server.starttls()
             server.login(from_address, password)
             server.send_message(msg)
-        print("Email sent successfully to", to_address)
+        logger.info("Email sent successfully to %s", to_address)
+
     except Exception as e:
         print("Failed to send email:", e)

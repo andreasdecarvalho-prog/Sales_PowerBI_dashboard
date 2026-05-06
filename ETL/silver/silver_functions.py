@@ -97,3 +97,42 @@ def products_dfs_to_db(file_names: list[str], dfs: list[pd.DataFrame]) -> None:
         logger.error("Failed to merge tables into 'products': %s", e, exc_info=True)
 
     logger.info("Silver transformation complete")
+
+import pandas as pd
+from core.logger import logger
+from core.config import GOLD_DIR, CSV_ENCODING
+
+def products_dfs_to_csv(file_names: list[str], dfs: list[pd.DataFrame]) -> str:
+    """
+    Concatena múltiplos DataFrames de produtos, adiciona IDs autoincrementados
+    e salva em um único CSV na pasta Gold.
+
+    Args:
+        file_names (list[str]): Nomes base dos arquivos (sem extensão).
+        dfs (list[pd.DataFrame]): Lista de DataFrames a serem concatenados.
+
+    Returns:
+        str: Caminho do arquivo CSV gerado.
+    """
+    if not dfs or len(dfs) < 2:
+        logger.warning("Não há DataFrames suficientes para gerar o CSV unificado")
+        return ""
+
+    try:
+        # Concatenar todos os DataFrames
+        merged_df = pd.concat(dfs, ignore_index=True)
+
+        # Adicionar coluna de IDs autoincrementados
+        merged_df.insert(0, "id", range(1, len(merged_df) + 1))
+
+        # Definir o caminho do arquivo final
+        file_path = GOLD_DIR / "products.csv"
+
+        # Salvar em CSV
+        merged_df.to_csv(file_path, index=False, encoding=CSV_ENCODING)
+        logger.debug("DataFrames concatenados e salvos em %s", file_path)
+
+        return str(file_path)
+    except Exception as e:
+        logger.error("Falha ao salvar CSV unificado: %s", e, exc_info=True)
+        return ""
