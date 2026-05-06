@@ -7,6 +7,7 @@ BRONZE_DIR = DATA_DIR / "bronze"
 GOLD_DIR = DATA_DIR / "gold"
 
 
+
 # Ensure directories exist
 for d in [DATA_DIR, BRONZE_DIR, GOLD_DIR]:
     d.mkdir(parents=True, exist_ok=True)
