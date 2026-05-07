@@ -6,6 +6,7 @@ Um projeto de visualização e análise de dados de vendas usando **Power BI**, 
 
 Este projeto demonstra uma abordagem profissional para análise e visualização de dados de vendas, aplicando best practices como limpeza de dados, modelagem dimensional e criação de KPIs visualmente efetivos. É um exemplo de como um analista de dados pode estruturar pipelines de dados que transformam dados brutos em insights acionáveis e dashboards de alta qualidade.
 
+
 ---
 
 ##  Estrutura do Projeto
@@ -79,15 +80,19 @@ A estrutura dos dados é otimizada seguindo o padrão **Star Schema**:
 
 ---
 
+### **Etapa 4: Dashboard em BI**
+
+<img width="976" height="538" alt="dashboard print (1)" src="https://github.com/user-attachments/assets/cfd76f9b-cfb0-4b3d-bb0c-e5a30328fa00" />
+
 ##  KPIs Principais no Dashboard
 
-- **Total de Vendas**: receita total no período
-- **Número de Transações**: volume de pedidos
-- **Ticket Médio**: valor médio por transação
-- **Top 10 Produtos**: produtos mais vendidos
-- **Vendas por Região**: distribuição geográfica
-- **Crescimento MoM**: variação mês a mês
-- **Taxa de Desconto**: impacto de promoções
+- **Lucro Total**
+- **Quantidade de Unidades Vendidas**
+- **Número de Vendas**
+- **Lucro por Dia**
+- **Lucro por Produto**
+- **Quantidade de Unidades Vendidas por Produto**
+- **Lucro por Categoria de produtos**
 
 ---
 
